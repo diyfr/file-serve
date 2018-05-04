@@ -50,3 +50,7 @@ services:
       - "traefik.frontend.entryPoints=https"
       - "traefik.docker.network=traefik"
     command: server /data
+networks:
+  traefik:
+   external:
+    name: traefik
