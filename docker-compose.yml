@@ -1,0 +1,52 @@
+version: '3'
+services:
+  proxy:
+    image: traefik
+    container_name: proxy
+    networks:
+      - traefik
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - "/var/dock/traefik/traefik.toml:/etc/traefik/traefik.toml"
+      - "/var/dock/traefik/acme:/etc/traefik/acme"
+      - /var/run/docker.sock:/var/run/docker.sock
+    labels:
+      - "traefik.frontend.rule=Host:t.${DOMAIN}"
+      - "traefik.port=8080"
+      - "traefik.backend=traefik"
+      - "traefik.enable=true"
+      - "traefik.frontend.entryPoints=https"
+  jdownloader:
+    image: jlesage/jdownloader-2
+    networks:
+      - traefik
+    volumes:
+      - "/var/dock/jdownloader:/config:rw"
+      - "/data/Donwloads:/output:rw"
+    labels:
+      - "traefik.frontend.rule=Host:j.${DOMAIN}"
+      - "traefik.backend=jdownloader"
+      - "traefik.port=5800"
+      - "traefik.enable=true"
+      - "traefik.frontend.entryPoints=https"
+      - "traefik.docker.network=traefik"
+  minio:
+    image: minio/minio
+    networks:
+      - traefik
+    volumes:
+      - "/var/dock/minio:/root/.minio:rw"
+      - "/data:/data:rw"
+    environnement:
+      - "MINIO_ACCESS_KEY=${MINIO_ACCESS}"
+      - "MINIO_SECRET_KEY=${MINIO_SECRET}"
+    labels:
+      - "traefik.frontend.rule=Host:m.${DOMAIN}"
+      - "traefik.backend=minio"
+      - "traefik.port=9000"
+      - "traefik.enable=true"
+      - "traefik.frontend.entryPoints=https"
+      - "traefik.docker.network=traefik"
+    command: server /data
