@@ -20,6 +20,7 @@ services:
       - "traefik.frontend.entryPoints=https"
   jdownloader:
     image: jlesage/jdownloader-2
+    container_name: jdownloader
     networks:
       - traefik
     volumes:
@@ -35,6 +36,7 @@ services:
       - "traefik.docker.network=traefik"
   minio:
     image: minio/minio
+    container_name: minio
     networks:
       - traefik
     volumes:
