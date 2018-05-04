@@ -26,7 +26,7 @@ services:
     volumes:
       - "/var/dock/jdownloader:/config:rw"
       - "/var/dock/jdownloader/storage:/storage:rw"
-      - "/data/Downloads:/output:rw"
+      - "/data/downloads:/output:rw"
     labels:
       - "traefik.frontend.rule=Host:j.${DOMAIN}"
       - "traefik.backend=jdownloader"
@@ -40,8 +40,8 @@ services:
     networks:
       - traefik
     volumes:
-      - "/var/dock/minio:/root/.minio:rw"
-      - "/data:/data:rw"
+      - "/var/dock/minio:/root/.minio"
+      - "/data:/export"
     environnement:
       - "MINIO_ACCESS_KEY=${MINIO_ACCESS}"
       - "MINIO_SECRET_KEY=${MINIO_SECRET}"
@@ -51,8 +51,9 @@ services:
       - "traefik.port=9000"
       - "traefik.enable=true"
       - "traefik.frontend.entryPoints=https"
+      - "traefik.frontend.passHostHeader=true"
       - "traefik.docker.network=traefik"
-    command: server /data
+    command: server /export
 networks:
   traefik:
    external:
