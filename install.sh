@@ -46,6 +46,11 @@ echo "Enter traefik console username"
 read REG_USERNAME
 htpasswd -c .traefik_pwd $REG_USERNAME
 
+echo "Define Basic Auth account for Jdownloader"
+echo "Enter Jdownloader username"
+read JD_USERNAME
+htpasswd -c .jdownloader_pwd $JD_USERNAME
+
 cp traefik.toml.ori /var/dock/traefik/traefik.toml
 echo "Create /var/dock/traefik/traefik.toml configuration"
 sed -i "s/%%DOMAIN%%/${DOMAIN}/g" /var/dock/traefik/traefik.toml
@@ -60,6 +65,7 @@ echo "EMAIL=$EMAIL" >> "$ENV_FILE"
 echo "MINIO_ACCESS=$MINIO_ACCESS" >> "$ENV_FILE"
 #echo "MINIO_SECRET=${MINIO_SECRET##*:}" >> "$ENV_FILE"
 echo "MINIO_SECRET=$MINIO_SECRET" >> "$ENV_FILE"
+echo "JDOWNLOADER_BASIC_AUTH=$(cat .jdownloader_pwd)" >> "$ENV_FILE"
 
 # CREATE DOCKER NETWORK
 docker network create traefik
