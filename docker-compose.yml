@@ -34,6 +34,7 @@ services:
       - "traefik.enable=true"
       - "traefik.frontend.entryPoints=https"
       - "traefik.docker.network=traefik"
+      - "traefik.frontend.auth.basic=$JDOWNLOADER_BASIC_AUTH"
   minio:
     image: minio/minio
     container_name: minio
