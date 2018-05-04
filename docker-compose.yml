@@ -24,7 +24,8 @@ services:
       - traefik
     volumes:
       - "/var/dock/jdownloader:/config:rw"
-      - "/data/Donwloads:/output:rw"
+      - "/var/dock/jdownloader/storage:/storage:rw"
+      - "/data/Downloads:/output:rw"
     labels:
       - "traefik.frontend.rule=Host:j.${DOMAIN}"
       - "traefik.backend=jdownloader"
