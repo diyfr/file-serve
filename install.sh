@@ -23,13 +23,18 @@ mkdir /var/dock/jdownloader
 mkdir /var/dock/minio
 mkdir /var/dock/traefik
 mkdir /var/dock/traefik/acme
+# Be careful Minio have restriction on folders names
 mkdir /data
-mkdir /data/Downloads
+mkdir /data/downloads
 
-echo "Define Basic Auth account for minio"
+echo "Define account for minio"
 echo "Enter minio access key"
 read MINIO_ACCESS
-MINIO_SECRET="$(htpasswd -n $MINIO_ACCESS)"
+#MINIO_SECRET="$(htpasswd -n $MINIO_ACCESS)"
+
+echo "Define account for minio"
+echo "Enter minio secret"
+read MINIO_SECRET
 
 echo "Enter domain ex: example.com"
 read DOMAIN
@@ -53,7 +58,8 @@ touch "$ENV_FILE"
 echo "DOMAIN=$DOMAIN" >> "$ENV_FILE"
 echo "EMAIL=$EMAIL" >> "$ENV_FILE"
 echo "MINIO_ACCESS=$MINIO_ACCESS" >> "$ENV_FILE"
-echo "MINIO_SECRET=${MINIO_SECRET##*:}" >> "$ENV_FILE"
+#echo "MINIO_SECRET=${MINIO_SECRET##*:}" >> "$ENV_FILE"
+echo "MINIO_SECRET=$MINIO_SECRET" >> "$ENV_FILE"
 
 # CREATE DOCKER NETWORK
 docker network create traefik
@@ -64,5 +70,3 @@ echo " -------------------------------------------------- "
 echo " No errors on traefik console for get "
 echo " Certificate -> edit /var/dock/traefik/traefik.toml "
 echo " -------------------------------------------------- "
-
-
