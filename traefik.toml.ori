@@ -1,0 +1,38 @@
+################################################################
+# Global configuration
+################################################################
+
+defaultEntryPoints = ["http", "https"]
+
+[entryPoints] 
+  [entryPoints.http]
+  address = ":80"
+    [entryPoints.http.redirect]
+    entryPoint = "https"
+  [entryPoints.https]
+  address = ":443"
+    [entryPoints.https.tls]
+
+[acme]
+email = "%%EMAIL%%"
+storageFile = "/etc/traefik/acme/acme.json"
+entryPoint = "https"
+OnHostRule = true
+#onDemand = true
+acmeLogging = true
+# comment on this line once you are on getting your certificates
+caServer = "https://acme-staging.api.letsencrypt.org/directory"
+
+[acme.httpChallenge]
+  entryPoint = "http"
+
+[web]
+address = ":8080"
+[web.auth.basic]
+  users = ["%%BASIC_AUTH%%"]
+
+[docker]
+endpoint = "unix:///var/run/docker.sock"
+domain = "%%DOMAIN%%"
+watch = true
+exposedbydefault = true
